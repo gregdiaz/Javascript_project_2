@@ -67,7 +67,6 @@ function active(elementClicked){
 };
 
 // Scroll to anchor ID using scrollTO event
-
 function scroll(menuSelector){
     elementTop =  document.getElementById(menuSelector).offsetTop;
     menuHeight = nav.offsetHeight;
@@ -99,7 +98,22 @@ Array.from (document.querySelector("#navbar__list").children).forEach(element =>
 });
 
 // Set sections as active
-document.addEventListener("scroll", scrollmenu =>{
-    console.log(scrollmenu);
+debugger;
+var v = document.querySelectorAll(".landing__container > h2");
+document.addEventListener("scroll", ()=>{
+    elementTop =  document.getElementsByClassName(v).offsetTop;
+    let scrollmenu = window.pageYOffset;
+    if (elementTop === scrollmenu){
+        console.log("igual");
+
+    }
 });
 
+function scroll(menuSelector){
+    elementTop =  document.getElementById(menuSelector).offsetTop;
+    menuHeight = nav.offsetHeight;
+    totalTop =  elementTop - menuHeight;
+    window.scrollTo(0,totalTop);
+    active(menuSelector);
+    return totalTop;
+}
