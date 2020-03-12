@@ -48,6 +48,9 @@ createnav(element());
 function createnav(menu){
     for(menu_info of menu){
         let menuop = document.createElement("li");
+        let menuLink = document.createElement("a");
+        menuLink.setAttribute("href", `#${menu_info.id}`);
+        menuop.appendChild(menuLink);
         menuop.setAttribute("target_id",menu_info.id);
         menuop.classList.add("menu__link");
         nav.appendChild(menuop);
@@ -58,12 +61,12 @@ function createnav(menu){
 // Add class 'active' to section when near top of viewport
 
 function active(elementClicked){
-    let activeClass = document.querySelector(".your-active-class");
+    let activeClass = document.querySelector(".active");
     let selectElement = document.querySelector("li[target_id="+elementClicked+"]");
     if(activeClass){
-        activeClass.classList.remove("your-active-class");
+        activeClass.classList.remove("active");
     };
-    selectElement.classList.add("your-active-class");
+    selectElement.classList.add("active");
 };
 
 // Scroll to anchor ID using scrollTO event
@@ -98,17 +101,6 @@ Array.from (document.querySelector("#navbar__list").children).forEach(element =>
 });
 
 // Set sections as active
-debugger;
-var v = document.querySelectorAll(".landing__container > h2");
-document.addEventListener("scroll", ()=>{
-    elementTop =  document.getElementsByClassName(v).offsetTop;
-    let scrollmenu = window.pageYOffset;
-    if (elementTop === scrollmenu){
-        console.log("igual");
-
-    }
-});
-
 function scroll(menuSelector){
     elementTop =  document.getElementById(menuSelector).offsetTop;
     menuHeight = nav.offsetHeight;
@@ -117,3 +109,30 @@ function scroll(menuSelector){
     active(menuSelector);
     return totalTop;
 }
+
+// highlight current tab
+$(window).on("scroll", function() {
+    var topNavHeight = $('#navbar__list').outerHeight() + 1;
+    var lastId;
+    var fromTop = $(this).scrollTop() + topNavHeight;
+    var menuItems = $("#navbar__list li a");
+    var scrollItems = menuItems.map(function(){
+        var item = $($(this).attr("href"));
+        if (item.length) { return item; }
+    });
+    var current = scrollItems.map(function(){
+        if ($(this).offset().top < fromTop)
+        return this;
+    });
+
+    current = current[current.length-1];
+    var id = current && current.length ? current[0].id : "";
+    
+    if (lastId !== id) {
+        lastId = id;
+        // Set/remove active class
+        menuItems
+            .parent().removeClass("active")
+            .end().filter(`[href="#${id}"]`).parent().addClass("active");
+    }       
+});
